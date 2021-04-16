@@ -17,6 +17,8 @@ const registerController = {
         if (error) {
             return next(error);
         }
+        // check database user
+
 
         res.json({ msg: 'Hello from express' })
     }
