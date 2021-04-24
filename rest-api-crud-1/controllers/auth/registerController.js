@@ -1,6 +1,8 @@
 import Joi from 'joi';
 import { User } from '../../models/index'
 import CustomErrorHandler from '../../services/CustomErrorHandler';
+import bcrypt from 'bcrypt';
+import JwtService from '../../services/JwtService';
 
 const registerController = {
 
@@ -29,7 +31,32 @@ const registerController = {
             return next(err)
         }
 
-        res.json({ msg: 'Hello from express' })
+        // bcrypt password
+        const hashPassword = await bcrypt.hash(req.body.password, 10);
+        const { name, email, password } = req.body;
+
+        const user = new User({
+
+            name,
+            email,
+            password: hashPassword
+
+        })
+
+
+        let access_token;
+
+        try {
+            const result = await user.save();
+            // console.log(result);
+            // token
+            access_token = JwtService.sign({ _id: result._id, role: result.role })
+
+        } catch (err) {
+            return next(err);
+        }
+
+        res.json({ access_token: access_token })
     }
 }
 export default registerController;
