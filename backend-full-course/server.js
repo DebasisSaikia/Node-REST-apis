@@ -8,9 +8,12 @@ const PORT = process.env.PORT || 5000;
 const publicpath = path.resolve(__dirname, 'public');
 app.use('public', express.static('static'));
 
+// setting template
+app.set('view engine', 'pug')
+
 // routes
 app.get('/', (req, res) => {
-    res.end('<h1>This is express App</h1>')
+    res.render('index')
 })
 
 app.listen(PORT, () => {
