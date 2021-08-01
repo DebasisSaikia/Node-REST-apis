@@ -41,7 +41,7 @@ const registerController = {
             email,
             password: hashPassword
 
-        })
+        });
 
 
         let access_token;
