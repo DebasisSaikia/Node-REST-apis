@@ -1,20 +1,14 @@
 const express = require('express');
 const app = express()
 const path = require('path')
+const routes = require('./router/index')
 
 const PORT = process.env.PORT || 5000;
 
 app.set('view engine', 'ejs');
+app.use('/', routes)
 
 // app.use(express.static('public'))
-
-app.get('/', (req, res) => {
-    res.render('index')
-})
-
-app.get('/about', (req, res) => {
-    res.render('about')
-})
 
 
 app.listen(PORT, () => {
