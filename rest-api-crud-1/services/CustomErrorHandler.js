@@ -13,6 +13,15 @@ class CustomErrorHandler extends Error {
     static notExist(message = "Invalid email or Password") {
         return new CustomErrorHandler(401, message)
     }
+
+
+    static notAuthorized(message = "User Not authorized") {
+        return new CustomErrorHandler(401, message)
+    }
+
+    static notFound(message = "404 Not Found") {
+        return new CustomErrorHandler(404, message)
+    }
 }
 
 export default CustomErrorHandler;
