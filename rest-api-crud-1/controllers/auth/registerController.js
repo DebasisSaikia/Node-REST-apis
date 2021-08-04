@@ -33,7 +33,7 @@ const registerController = {
 
         // bcrypt password
         const hashPassword = await bcrypt.hash(req.body.password, 10);
-        const { name, email, password } = req.body;
+        const { name, email } = req.body;
 
         const user = new User({
 
