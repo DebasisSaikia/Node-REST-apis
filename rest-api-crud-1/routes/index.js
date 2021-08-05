@@ -32,4 +32,7 @@ router.delete('/products/:id', [auth, admin], productController.destroy);
 // get all products
 router.get('/products', productController.getAll);
 
+// get one products
+router.get('/products/:id', productController.showOne)
+
 export default router

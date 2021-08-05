@@ -13,6 +13,8 @@ app.use(express.static('public'))
 
 app.use('/api', routes);
 
+app.use('/uploads', express.static('uploads'))
+
 
 // db connection
 mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true });

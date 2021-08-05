@@ -2,7 +2,6 @@ import multer from 'multer'
 import { Product } from '../../models';
 import path from 'path'
 import CustomErrorHandler from '../../services/CustomErrorHandler';
-import Joi from 'joi';
 import fs from 'fs';
 import productSchema from '../../validations/productValidations';
 
@@ -10,12 +9,18 @@ import productSchema from '../../validations/productValidations';
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'uploads/'),
     filename: (req, file, cb) => {
-        const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`
-        cb(null, uniqueName)
-    }
-})
+        const uniqueName = `${Date.now()}-${Math.round(
+            Math.random() * 1e9
+        )}${path.extname(file.originalname)}`;
+        // 3746674586-836534453.png
+        cb(null, uniqueName);
+    },
+});
 
-const handleMultiData = multer({ storage, limits: { fileSize: 1000000 * 5 } }).single('image');
+const handleMultiData = multer({
+    storage,
+    limits: { fileSize: 1000000 * 5 },
+}).single('image');
 
 
 const productController = {
@@ -70,6 +75,7 @@ const productController = {
 
             if (req.file) {
                 filePath = req.file.path;
+                console.log(filePath)
             }
 
 
@@ -117,23 +123,39 @@ const productController = {
         }
 
         // delete all documents.delete the image first
-        const imagePath = document.image
+        const imagePath = document._doc.image
         fs.unlink(`${appRoot}/${imagePath}`, (err) => {
             if (err) {
                 return next(CustomErrorHandler.serverError());
             }
+
+            return res.json(document)
         })
-        res.json(document)
+
     },
 
     async getAll(req, res, next) {
         let documents;
+
+
         try {
-            documents = await Product.find();
-            res.status(200).json(documents)
+            documents = await Product.find().select('-updatedAt -__v').sort({ _id: -1 });
         } catch (error) {
             return next(CustomErrorHandler.serverError())
         }
+
+        return res.status(200).json(documents)
+    },
+
+    async showOne(req, res, next) {
+        let document;
+        try {
+            document = await Product.findOne({ _id: req.params.id }).select('-updatedAt -__v')
+        } catch (err) {
+            return next(CustomErrorHandler.serverError())
+        }
+
+        return res.status(200).json(document)
     }
 
 
