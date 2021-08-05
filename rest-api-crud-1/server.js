@@ -22,6 +22,10 @@ db.once('open', () => {
     console.log('Database Connected !!')
 })
 
+// global variable
+global.appRoot = path.resolve(__dirname);
+app.use(express.urlencoded({ extended: false }));
+
 app.use(errorHandler);
 
 app.listen(APP_PORT, () => {

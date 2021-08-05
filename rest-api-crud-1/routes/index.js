@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import { registerController, loginController, userController, refreshController, productController } from '../controllers'
+import admin from '../middlewares/admin';
 import auth from '../middlewares/auth';
 
 // endpoints
@@ -20,6 +21,15 @@ router.post('/refresh', refreshController.refresh);
 router.post('/logout', auth, loginController.logout);
 
 // create products
-router.post('/products', productController.store);
+router.post('/products', [auth, admin], productController.store);
+
+// update products
+router.put('/products/:id', [auth, admin], productController.update);
+
+// delete products
+router.delete('/products/:id', [auth, admin], productController.destroy);
+
+// get all products
+router.get('/products', productController.getAll);
 
 export default router
